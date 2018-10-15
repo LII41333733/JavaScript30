@@ -58,23 +58,40 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+  //function to remove the transition added;
+  //There are over 15 properties that were transitioned at 'keydown', so we only
+  //want those that do not have 'transform' as the property name
   function removeTransition(e) {
     if (e.propertyName !== 'transform') return;
+    //removes 'playing' class from key element
     e.target.classList.remove('playing');
   }
 
+  //function to play the sound associated with the key pressed
   function playSound(e) {
     const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
     const key = document.querySelector(`div[data-key="${e.keyCode}"]`);
     if (!audio) return;
 
+    //add class 'playing' to the key after pressed
     key.classList.add('playing');
-    audio.currentTime = 0;
+    
+    //used to reset the audio back to start so we can hit the keys repeatedly 
+    //without waiting for the previous audio to end:
+    audio.currentTime = 0; 
+
+    //function to play the audio
     audio.play();
   }
 
+  //Array constructor for all keys
   const keys = Array.from(document.querySelectorAll('.key'));
+
+  //for each key, add an event listener for when the transition/animation ends
+  //for it to be removed
   keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+
+  //add keydown event listener to play the sound
   window.addEventListener('keydown', playSound);
 </script>
 
